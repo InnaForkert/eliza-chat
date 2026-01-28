@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Messages from './Messages.vue'
+</script>
 
 <template>
   <div class="page">
@@ -15,29 +17,7 @@
       </header>
 
       <main class="chat-body">
-        <ul class="messages" aria-label="Chat messages">
-          <!-- Message item examples -->
-          <li class="msg msg--bot">
-            <div class="msg__bubble">
-              <div class="msg__meta">Eliza • <span class="msg__time">12:41</span></div>
-              <div class="msg__text">Hello. How are you feeling today?</div>
-            </div>
-          </li>
-
-          <li class="msg msg--user">
-            <div class="msg__bubble">
-              <div class="msg__meta">You • <span class="msg__time">12:42</span></div>
-              <div class="msg__text">I feel anxious lately.</div>
-            </div>
-          </li>
-
-          <li class="msg msg--system">
-            <div class="msg__bubble">
-              <div class="msg__meta">System</div>
-              <div class="msg__text">Network error. Please try again.</div>
-            </div>
-          </li>
-        </ul>
+        <Messages />
       </main>
 
       <footer class="chat-footer">
