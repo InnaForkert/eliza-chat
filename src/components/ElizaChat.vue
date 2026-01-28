@@ -5,7 +5,7 @@ import Messages from "./ChatMessages.vue"
 import { sendToEliza } from "@/api/eliza"
 import { createErrorMessage, createMessage } from "@/utils/createMessage"
 
-const { isSending, addMessage, messages } = useChat()
+const { isSending, addMessage, messages, clearChat } = useChat()
 
 async function handleSendMessage(text: string) {
   if (isSending.value || !text.trim()) return
@@ -35,7 +35,7 @@ async function handleSendMessage(text: string) {
         </div>
 
         <div class="chat-actions">
-          <button class="btn btn--ghost" type="button">Clear</button>
+          <button class="btn btn--ghost" type="button" @click="clearChat">Clear</button>
         </div>
       </header>
 

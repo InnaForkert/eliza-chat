@@ -6,7 +6,7 @@ const { messages } = defineProps<{ messages: ChatMessage[] }>()
 </script>
 
 <template>
-  <ul class="messages" aria-label="Chat messages">
+  <ul class="messages" aria-label="Chat messages" v-if="messages.length">
     <MessageItem
       v-for="{ author, text, timestamp, id } in messages"
       :key="id"
@@ -15,4 +15,5 @@ const { messages } = defineProps<{ messages: ChatMessage[] }>()
       :timestamp="timestamp"
     />
   </ul>
+  <span v-else>Chat history is empty. Send your first message!</span>
 </template>
