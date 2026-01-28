@@ -2,11 +2,15 @@
 import { MessageAuthor } from "@/types/chat"
 import { computed } from "vue"
 
-const { author, text, time } = defineProps<{ author: MessageAuthor; text: string; time: string }>()
+const { author, text, timestamp } = defineProps<{
+  author: MessageAuthor
+  text: string
+  timestamp: Date
+}>()
 
 const authorLabel = computed(() => {
-  const labels = {
-    eliza: "Eliza",
+  const labels: Record<MessageAuthor, string> = {
+    bot: "Eliza",
     user: "You",
     system: "System"
   }
@@ -14,11 +18,11 @@ const authorLabel = computed(() => {
 })
 
 const showTime = computed(() => ["user", "eliza"].includes(author))
-const formattedTime = computed(() => time ?? "") // to 12:41 format
+const formattedTime = computed(() => timestamp ?? "") // to 12:41 format
 </script>
 
 <template>
-  <li class="msg msg--bot">
+  <li class="msg" :class="`msg--${author}`">
     <div class="msg__bubble">
       <div class="msg__meta">
         {{ authorLabel }}
