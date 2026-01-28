@@ -17,8 +17,13 @@ const authorLabel = computed(() => {
   return labels[author]
 })
 
-const showTime = computed(() => ["user", "eliza"].includes(author))
-const formattedTime = computed(() => timestamp ?? "") // to 12:41 format
+const showTime = computed(() => ["user", "bot"].includes(author))
+const formattedTime = computed(() => {
+  if (!timestamp) return ""
+  const hours = String(timestamp.getHours()).padStart(2, "0")
+  const minutes = String(timestamp.getMinutes()).padStart(2, "0")
+  return `${hours}:${minutes}`
+})
 </script>
 
 <template>

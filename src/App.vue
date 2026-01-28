@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Chat from "@/components/Chat.vue"
+import ElizaChat from "./components/ElizaChat.vue"
 </script>
 
 <template>
-  <Chat />
+  <ElizaChat />
 </template>
