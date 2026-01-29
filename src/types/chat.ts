@@ -1,8 +1,19 @@
 export type MessageAuthor = "system" | "user" | "bot"
 
-export interface ChatMessage {
+export type MessageStatus = "pending" | "success" | "failed"
+
+export type ChatMessage = UserMessage | BotMessage
+export interface BaseMessage {
   id: string
-  author: MessageAuthor
   text: string
   timestamp: Date
+}
+
+export interface UserMessage extends BaseMessage {
+  author: "user"
+  status: MessageStatus
+}
+
+export interface BotMessage extends BaseMessage {
+  author: "bot"
 }
