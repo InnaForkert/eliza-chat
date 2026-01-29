@@ -1,4 +1,4 @@
-export type MessageAuthor = "system" | "user" | "bot"
+export type MessageAuthor = "user" | "bot"
 
 export type MessageStatus = "pending" | "success" | "failed"
 
