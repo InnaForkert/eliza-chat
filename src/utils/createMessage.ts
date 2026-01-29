@@ -1,19 +1,20 @@
-import { ChatMessage, MessageAuthor } from "@/types/chat"
+import { BotMessage, MessageStatus, UserMessage } from "@/types/chat"
 
-export function createMessage(text: string, author: MessageAuthor): ChatMessage {
+export function createUserMessage(text: string, status: MessageStatus): UserMessage {
   return {
     id: crypto.randomUUID(),
-    author,
+    author: "user",
     text,
-    timestamp: new Date()
+    timestamp: new Date(),
+    status
   }
 }
 
-export function createErrorMessage(): ChatMessage {
+export function createBotMessage(text: string): BotMessage {
   return {
     id: crypto.randomUUID(),
-    author: "system",
-    text: "Something went wrong. Please try again.",
+    author: "bot",
+    text,
     timestamp: new Date()
   }
 }
