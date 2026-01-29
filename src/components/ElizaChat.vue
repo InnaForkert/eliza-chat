@@ -2,26 +2,13 @@
 import { useChat } from "@/composables/useChat"
 import ChatInput from "./ChatInput.vue"
 import Messages from "./ChatMessages.vue"
-import { sendToEliza } from "@/api/eliza"
-import { createErrorMessage, createMessage } from "@/utils/createMessage"
 
-const { isSending, addMessage, messages, clearChat } = useChat()
+const { isSending, messages, clearChat, retryMessage, sendMessage } = useChat()
 
-async function handleSendMessage(text: string) {
+function handleSendMessage(text: string) {
   if (isSending.value || !text.trim()) return
 
-  addMessage(createMessage(text, "user"))
-  isSending.value = true
-
-  try {
-    const reply = await sendToEliza(text)
-    addMessage(createMessage(reply, "bot"))
-  } catch (error) {
-    addMessage(createErrorMessage())
-    console.log(error)
-  } finally {
-    isSending.value = false
-  }
+  sendMessage(text)
 }
 </script>
 
@@ -40,7 +27,7 @@ async function handleSendMessage(text: string) {
       </header>
 
       <main class="chat-body">
-        <Messages :messages="messages" />
+        <Messages :messages="messages" @retry-message="retryMessage" />
       </main>
 
       <ChatInput :is-sending="isSending" @send-message="handleSendMessage" />
