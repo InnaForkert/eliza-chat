@@ -16,7 +16,8 @@ const isFailed = computed(() => userMessage.value?.status === "failed")
 const authorLabel = computed(() => {
   const labels: Record<MessageAuthor, string> = {
     bot: "Eliza",
-    user: "You"
+    user: "You",
+    system: "System"
   }
   return labels[message.author]
 })

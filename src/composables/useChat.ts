@@ -1,6 +1,6 @@
 import { sendToEliza } from "@/api/eliza"
 import { ChatMessage, MessageStatus, UserMessage } from "@/types/chat"
-import { createBotMessage, createUserMessage } from "@/utils/createMessage"
+import { createBotMessage, createSystemMessage, createUserMessage } from "@/utils/createMessage"
 import { delayRequest } from "@/utils/delayRequest"
 import { computed, ref, watch } from "vue"
 
@@ -28,6 +28,7 @@ export function useChat() {
       addMessage(createBotMessage(reply))
     } catch (error) {
       updateMessageStatus(userMessage.id, "failed")
+      addMessage(createSystemMessage())
       console.log(error)
     }
   }
@@ -58,6 +59,7 @@ export function useChat() {
     } catch (error) {
       await delayRequest(start)
       updateMessageStatus(retriedMessage.id, "failed")
+      addMessage(createSystemMessage())
       console.log(error)
     }
   }

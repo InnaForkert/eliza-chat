@@ -1,8 +1,9 @@
-export type MessageAuthor = "user" | "bot"
+export type MessageAuthor = "user" | "bot" | "system"
 
 export type MessageStatus = "pending" | "success" | "failed"
 
-export type ChatMessage = UserMessage | BotMessage
+export type ChatMessage = UserMessage | BotMessage | SystemMessage
+
 export interface BaseMessage {
   id: string
   text: string
@@ -16,4 +17,8 @@ export interface UserMessage extends BaseMessage {
 
 export interface BotMessage extends BaseMessage {
   author: "bot"
+}
+
+export interface SystemMessage extends BaseMessage {
+  author: "system"
 }
