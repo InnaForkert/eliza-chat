@@ -11,8 +11,25 @@ export default defineConfig([
     extends: ["js/recommended"],
     languageOptions: { globals: globals.browser }
   },
+  {
+    ignores: ["dist", "coverage", "public", "node_modules", "**/*.min.js", "**/*.d.ts"]
+  },
   tseslint.configs.recommended,
   pluginVue.configs["flat/essential"],
   { files: ["**/*.vue"], languageOptions: { parserOptions: { parser: tseslint.parser } } },
-  { rules: { "no-unused-vars": "error", "no-undef": "error" } }
+  {
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "error",
+      "no-undef": "off",
+
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        {
+          allowShortCircuit: true,
+          allowTernary: true
+        }
+      ]
+    }
+  }
 ])

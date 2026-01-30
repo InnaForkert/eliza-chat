@@ -41,7 +41,6 @@ onMounted(() => {
           ref="inputRef"
           v-model="input"
           @keydown.enter.exact.prevent="handleSendMessage"
-          @keydown.enter.shift="() => {}"
           id="message"
           class="input"
           type="text"

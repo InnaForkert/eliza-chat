@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ChatMessage } from "@/types/chat"
 import MessageItem from "./MessageItem.vue"
-import { nextTick, ref, watch } from "vue"
+import { nextTick, onMounted, ref, watch } from "vue"
 
 const { messages } = defineProps<{ messages: ChatMessage[] }>()
 
@@ -11,11 +11,11 @@ const emit = defineEmits<{
 
 const listRef = ref<HTMLElement | null>(null)
 
-function scrollToBottom() {
+function scrollToBottom(behavior: ScrollBehavior) {
   if (!listRef.value) return
   listRef.value.scrollTo({
     top: listRef.value.scrollHeight,
-    behavior: "smooth"
+    behavior
   })
 }
 
@@ -23,10 +23,13 @@ watch(
   () => messages.length,
   async () => {
     await nextTick()
-    scrollToBottom()
-  },
-  { immediate: true }
+    scrollToBottom("smooth")
+  }
 )
+
+onMounted(() => {
+  scrollToBottom("instant")
+})
 </script>
 
 <template>

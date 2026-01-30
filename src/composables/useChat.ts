@@ -29,7 +29,7 @@ export function useChat() {
     } catch (error) {
       updateMessageStatus(userMessage.id, "failed")
       addMessage(createSystemMessage())
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -60,7 +60,7 @@ export function useChat() {
       await delayRequest(start)
       updateMessageStatus(retriedMessage.id, "failed")
       addMessage(createSystemMessage())
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -87,10 +87,17 @@ export function useChat() {
     try {
       const parsed = JSON.parse(raw)
 
-      return parsed.map((msg) => ({
-        ...msg,
-        timestamp: new Date(msg.timestamp)
-      }))
+      return parsed.map((msg: ChatMessage) => {
+        const parsedMessage = {
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }
+        if (parsedMessage.author === "user" && parsedMessage.status === "pending") {
+          parsedMessage.status = "failed"
+        }
+
+        return parsedMessage
+      })
     } catch {
       return []
     }
