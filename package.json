@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "eslint . --max-warnings=0",
   },
   "dependencies": {
     "@buf/connectrpc_eliza.bufbuild_es": "2.11.0-20230913231627-233fca715f49.1",
