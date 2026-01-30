@@ -5,7 +5,7 @@ import { delayRequest } from "@/utils/delayRequest"
 import { computed, ref } from "vue"
 
 export function useChat() {
-  const messages = ref<ChatMessage[]>()
+  const messages = ref<ChatMessage[]>([])
 
   const isSending = computed(() =>
     messages.value.some((message) => message.author === "user" && message.status === "pending")

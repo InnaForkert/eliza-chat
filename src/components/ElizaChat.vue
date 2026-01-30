@@ -26,9 +26,7 @@ function handleSendMessage(text: string) {
         </div>
       </header>
 
-      <main class="chat-body">
-        <Messages :messages="messages" @retry-message="retryMessage" />
-      </main>
+      <Messages :messages="messages" @retry-message="retryMessage" />
 
       <ChatInput :is-sending="isSending" @send-message="handleSendMessage" />
     </div>
