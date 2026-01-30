@@ -24,7 +24,8 @@ watch(
   async () => {
     await nextTick()
     scrollToBottom()
-  }
+  },
+  { immediate: true }
 )
 </script>
 

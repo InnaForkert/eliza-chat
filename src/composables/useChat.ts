@@ -2,10 +2,12 @@ import { sendToEliza } from "@/api/eliza"
 import { ChatMessage, MessageStatus, UserMessage } from "@/types/chat"
 import { createBotMessage, createUserMessage } from "@/utils/createMessage"
 import { delayRequest } from "@/utils/delayRequest"
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
+
+const STORAGE_KEY = "eliza-chat-messages"
 
 export function useChat() {
-  const messages = ref<ChatMessage[]>([])
+  const messages = ref<ChatMessage[]>(loadMessages())
 
   const isSending = computed(() =>
     messages.value.some((message) => message.author === "user" && message.status === "pending")
@@ -69,7 +71,30 @@ export function useChat() {
 
   function clearChat() {
     messages.value = []
+    localStorage.removeItem(STORAGE_KEY)
   }
+
+  function saveMessages() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.value))
+  }
+
+  function loadMessages(): ChatMessage[] {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return []
+
+    try {
+      const parsed = JSON.parse(raw)
+
+      return parsed.map((msg) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp)
+      }))
+    } catch {
+      return []
+    }
+  }
+
+  watch(messages, () => saveMessages(), { deep: true })
 
   return {
     messages,
