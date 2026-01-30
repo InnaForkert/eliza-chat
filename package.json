@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings=0",
+    "test": "vitest run"
   },
   "dependencies": {
     "@buf/connectrpc_eliza.bufbuild_es": "2.11.0-20230913231627-233fca715f49.1",
@@ -23,16 +24,19 @@
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.7.0",
     "globals": "^17.2.0",
     "jiti": "^2.6.1",
+    "jsdom": "^27.4.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.54.0",
     "vite": "^7.2.4",
+    "vitest": "^4.0.18",
     "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.1.4"
   }
