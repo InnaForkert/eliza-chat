@@ -1,13 +1,13 @@
 import { sendToEliza } from "@/api/eliza"
 import { describe, expect, vi, it, beforeEach } from "vitest"
-import { useChat } from "./useChat"
-import { UserMessage } from "@/types/chat"
+import { useChatActions } from "./useChatActions"
+import { isUserMessage } from "@/utils/isUserMessage"
 
 vi.mock("@/api/eliza.ts")
 
 describe("useChat", () => {
   beforeEach(() => {
-    const { messages } = useChat()
+    const { messages } = useChatActions()
     messages.value = []
     vi.clearAllMocks()
   })
@@ -15,7 +15,7 @@ describe("useChat", () => {
   it("adds user and bot messages on successful send", async () => {
     vi.mocked(sendToEliza).mockResolvedValue("Test bot response message")
 
-    const { messages, sendMessage } = useChat()
+    const { messages, sendMessage } = useChatActions()
 
     await sendMessage("Hi")
 
@@ -27,13 +27,20 @@ describe("useChat", () => {
   it("marks message as failed and creates system message on error", async () => {
     vi.mocked(sendToEliza).mockRejectedValue(new Error("Network error"))
 
-    const { messages, sendMessage } = useChat()
+    const { messages, sendMessage } = useChatActions()
 
     await sendMessage("Hi")
 
     expect(messages.value).toHaveLength(2)
-    expect(messages.value[0].author).toBe("user")
-    expect((messages.value[0] as UserMessage).status).toBe("failed")
+
+    const userMessage = messages.value[0]
+    expect(isUserMessage(messages.value[0])).toBe(true)
+
+    if (!isUserMessage(userMessage)) {
+      throw new Error("Expected UserMessage")
+    }
+
+    expect(userMessage.status).toBe("failed")
     expect(messages.value[1].author).toBe("system")
   })
 
@@ -42,7 +49,7 @@ describe("useChat", () => {
       .mockRejectedValueOnce(new Error("Network error"))
       .mockResolvedValueOnce("Recovered")
 
-    const { messages, sendMessage, retryMessage } = useChat()
+    const { messages, sendMessage, retryMessage } = useChatActions()
 
     await sendMessage("Hi")
 

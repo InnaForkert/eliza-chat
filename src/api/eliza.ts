@@ -4,7 +4,7 @@ import { createConnectTransport } from "@connectrpc/connect-web"
 import { ElizaService } from "@buf/connectrpc_eliza.bufbuild_es/connectrpc/eliza/v1/eliza_pb"
 
 const transport = createConnectTransport({
-  baseUrl: "https://demo.connectrpc.com"
+  baseUrl: import.meta.env.VITE_BASE_URL
 })
 
 const client = createClient(ElizaService, transport)

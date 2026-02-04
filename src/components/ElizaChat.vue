@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useChat } from "@/composables/useChat"
+import { useChatActions } from "@/composables/useChatActions"
 import ChatInput from "./ChatInput.vue"
 import Messages from "./ChatMessages.vue"
 
-const { isSending, messages, clearChat, retryMessage, sendMessage } = useChat()
+const { isSending, messages, clearChat, retryMessage, sendMessage } = useChatActions()
 
 function handleSendMessage(text: string) {
   if (isSending.value || !text.trim()) return

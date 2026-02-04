@@ -1,12 +1,15 @@
-import { sendToEliza } from "@/api/eliza"
-import { ChatMessage, MessageStatus, UserMessage } from "@/types/chat"
+import { ChatMessage, MessageStatus } from "@/types/chat"
 import { createBotMessage, createSystemMessage, createUserMessage } from "@/utils/createMessage"
 import { delayRequest } from "@/utils/delayRequest"
 import { computed, ref, watch } from "vue"
+import { useChatApi } from "./useChatApi"
+import { useChatStorage } from "./useChatStorage"
+import { isUserMessage } from "@/utils/isUserMessage"
 
-const STORAGE_KEY = "eliza-chat-messages"
+export function useChatActions() {
+  const { sendMessageToApi } = useChatApi()
+  const { loadMessages, saveMessages, clearChatStorage } = useChatStorage()
 
-export function useChat() {
   const messages = ref<ChatMessage[]>(loadMessages())
 
   const isSending = computed(() =>
@@ -22,7 +25,7 @@ export function useChat() {
     addMessage(userMessage)
 
     try {
-      const reply = await sendToEliza(text)
+      const reply = await sendMessageToApi(text)
 
       updateMessageStatus(userMessage.id, "success")
       addMessage(createBotMessage(reply))
@@ -41,7 +44,7 @@ export function useChat() {
     if (msgIndex === -1) return
 
     const msg = messages.value[msgIndex]
-    if ((msg as UserMessage).status !== "failed") return
+    if (!isUserMessage(msg) || msg.status !== "failed") return
 
     messages.value.splice(msgIndex, 1)
 
@@ -51,7 +54,7 @@ export function useChat() {
     const start = Date.now()
 
     try {
-      const reply = await sendToEliza(msg.text)
+      const reply = await sendMessageToApi(msg.text)
 
       await delayRequest(start)
       updateMessageStatus(retriedMessage.id, "success")
@@ -65,7 +68,9 @@ export function useChat() {
   }
 
   function updateMessageStatus(messageId: string, status: MessageStatus) {
-    const msg = messages.value.find((message) => message.id === messageId) as UserMessage
+    const msg = messages.value.find((message) => message.id === messageId)
+    if (!isUserMessage(msg)) return
+
     if (msg?.author === "user") {
       msg.status = status
     }
@@ -73,37 +78,16 @@ export function useChat() {
 
   function clearChat() {
     messages.value = []
-    localStorage.removeItem(STORAGE_KEY)
+    clearChatStorage()
   }
 
-  function saveMessages() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.value))
-  }
-
-  function loadMessages(): ChatMessage[] {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-
-    try {
-      const parsed = JSON.parse(raw)
-
-      return parsed.map((msg: ChatMessage) => {
-        const parsedMessage = {
-          ...msg,
-          timestamp: new Date(msg.timestamp)
-        }
-        if (parsedMessage.author === "user" && parsedMessage.status === "pending") {
-          parsedMessage.status = "failed"
-        }
-
-        return parsedMessage
-      })
-    } catch {
-      return []
-    }
-  }
-
-  watch(messages, () => saveMessages(), { deep: true })
+  watch(
+    messages,
+    (val) => {
+      saveMessages(val)
+    },
+    { deep: true }
+  )
 
   return {
     messages,
